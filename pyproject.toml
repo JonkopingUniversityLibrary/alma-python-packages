@@ -14,7 +14,7 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/JonkopingUniversityLibrary/almaapi"
+Homepage = "https://github.com/JonkopingUniversityLibrary/alma-python-packages"
 
 [build-system]
 requires = ["hatchling"]
