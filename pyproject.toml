@@ -1,6 +1,6 @@
 [project]
 name = "alma-python-packages"
-version = "1.4.12"
+version = "1.4.13"
 description = "Python module for making requests to the Alma API"
 readme = "README.md"
 requires-python = ">=3.14"
