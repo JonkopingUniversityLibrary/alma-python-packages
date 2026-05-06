@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "alma_python_packages"
-version = "1.4.10"
+version = "2.0.0"
 description = "Python module for making requests to the Alma API"
 requires-python = ">=3.7"
 license = "MIT"
