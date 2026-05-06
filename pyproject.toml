@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "alma_python_packages"
+version = "1.4.10"
+description = "Python module for making requests to the Alma API"
+requires-python = ">=3.7"
+license = "MIT"
+authors = [
+  {name = "Gustav Lindqvist", email = "gustav.lindqvist@ju.se"},
+]
+urls = {Homepage = "https://github.com/JonkopingUniversityLibrary/almaapi"}
+dependencies = [
+  "httplib2",
+  "xmljson",
+]
+
+[tool.setuptools]
+packages = [
+    "alma_python_packages.analytics_parser",
+    "alma_python_packages.api",
+    "alma_python_packages.marc"
+]
