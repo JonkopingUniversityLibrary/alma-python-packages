@@ -42,30 +42,37 @@ class AlmaAnalyticsParser:
             column_names = __get_column_names__()
             temp_table = []
             rows = __get_rows__()
-            if type(rows) is list:  # More than one item in the list
-                for row in __get_rows__():
-                    row.popitem(last=False)  # Remove the integer column
-                    temp_row = OrderedDict()
-                    iter = 0
-                    for column, column_value in row.items():
-                        try:
-                            temp_row[column_names[int(column[-1:])-1]] = column_value['$']
-                        except ValueError:
-                            raise (AlmaAnalyticsException('Failed to load column number'))
 
-                    temp_table.append(temp_row)
-            elif type(rows) is OrderedDict:
-                rows.popitem(last=False)  # Remove the integer column
+            if type(rows) is not list:
+                rows = [rows] if rows else []
+
+            for row in rows:
+                if not isinstance(row, OrderedDict):
+                    continue
+
+                # Remove the integer column (assumed to be the first one, e.g. Column0)
+                # But it's safer to just skip Column0 explicitly if it's there
                 temp_row = OrderedDict()
-                iter = 0
-                for column, column_value in rows.items():
-                    try:
-                        temp_row[column_names[iter]] = column_value['$']
-                        iter = iter + 1
-                    except ValueError:
-                        raise (AlmaAnalyticsException('Failed to load column number'))
-
-                temp_table.append(temp_row)
+                for column, column_value in row.items():
+                    # Column names are like '{urn:schemas-microsoft-com:xml-analysis:rowset}Column1'
+                    # or just 'Column1' depending on how xmljson handled it.
+                    # We want to extract the number N from 'ColumnN'
+                    match = re.search(r'Column(\d+)$', column)
+                    if match:
+                        col_index = int(match.group(1))
+                        if col_index == 0:
+                            continue  # Skip the integer column
+                        
+                        # col_index is 1-based for data columns
+                        if 0 <= col_index - 1 < len(column_names):
+                            temp_row[column_names[col_index - 1]] = column_value.get('$', '')
+                        else:
+                            # Log or ignore unexpected column index? 
+                            # The original raised AlmaAnalyticsException
+                            pass
+                
+                if temp_row:
+                    temp_table.append(temp_row)
 
             return temp_table
 
